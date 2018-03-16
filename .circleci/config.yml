@@ -3,9 +3,6 @@ jobs:
    build_push_deploy:
      docker:
        - image: hkevinchu/circleci-builder
-     environment:
-       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
      steps:
        - checkout
        - run: |
