@@ -19,7 +19,7 @@ jobs:
             kubectl delete pod $(kubectl get pods | grep api-php | cut -f1 -d' ')
 workflows:
   version: 2
-  build:
+  build_push_deploy:
     jobs:
       - build_push_deploy
           filters:
