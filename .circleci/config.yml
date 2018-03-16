@@ -6,9 +6,22 @@ jobs:
      steps:
        - checkout
        - run: |
-            echo "build job line 1"
-            uptime
-            pwd
+            cat <<EOF > /root/.aws/config
+            [profile deployment_staging]
+            aws_access_key_id = ${AWS_ACCESS_KEY_ID}
+            aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}
+            default_region = ${AWS_DEFAULT_REGION}
+            EOF
+            chmod 600 /root/.aws/config
+            aws --profile deployment_staging s3api get-object --bucket ${YEMBO_SECURE_S3_BUCKET} --key ca.pem /root/credentials/ca.pem
+            aws --profile deployment_staging s3api get-object --bucket ${YEMBO_SECURE_S3_BUCKET} --key admin.pem /root/credentials/admin.pem
+            aws --profile deployment_staging s3api get-object --bucket ${YEMBO_SECURE_S3_BUCKET} --key admin-key.pem /root/credentials/admin-key.pem
+            aws --profile deployment_staging s3api get-object --bucket ${YEMBO_SECURE_S3_BUCKET} --key kubeconfig /root/kubeconfig
+            export KUBECONFIG=/root/kubeconfig
+            make build
+            make push
+            make deploy
+            kubectl delete pod $(kubectl get pods | grep ${YEMBO_MICROSERVICE} | cut -f1 -d' ')
 
 workflows:
   version: 2
