@@ -2,22 +2,14 @@ version: 2
 jobs:
    build:
      docker:
-       - image: circleci/php:apache-node-browsers
+       - image: hkevinchu/circleci-builder
      steps:
        - checkout
-       - run: echo "build job complete"
-   test:
-     docker:
-       - image: circleci/php:apache-node-browsers
-     steps:
-       - checkout
-       - run: echo "test job complete"
-   deploy:
-     docker:
-       - image: circleci/php:apache-node-browsers
-     steps:
-       - checkout
-       - run: echo "deploy job complete"
+       - run: |
+            echo "build job line 1"
+            uptime
+            pwd
+
 workflows:
   version: 2
   build_test_and_deploy:
