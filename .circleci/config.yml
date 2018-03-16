@@ -3,21 +3,18 @@ jobs:
    build_push_deploy:
      docker:
        - image: hkevinchu/circleci-builder
+     environment:
+       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
      steps:
        - checkout
        - run: |
-            cat <<EOF > /root/.aws/config
-            [profile deployment_staging]
-            aws_access_key_id = ${AWS_ACCESS_KEY_ID}
-            aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}
-            default_region = ${AWS_DEFAULT_REGION}
-            EOF
-            chmod 600 /root/.aws/config
-            aws --profile deployment_staging s3api get-object --bucket ${YEMBO_SECURE_S3_BUCKET} --key ca.pem /root/credentials/ca.pem
-            aws --profile deployment_staging s3api get-object --bucket ${YEMBO_SECURE_S3_BUCKET} --key admin.pem /root/credentials/admin.pem
-            aws --profile deployment_staging s3api get-object --bucket ${YEMBO_SECURE_S3_BUCKET} --key admin-key.pem /root/credentials/admin-key.pem
-            aws --profile deployment_staging s3api get-object --bucket ${YEMBO_SECURE_S3_BUCKET} --key kubeconfig /root/kubeconfig
-            export KUBECONFIG=/root/kubeconfig
+            mkdir credentials
+            aws s3api get-object --bucket ${YEMBO_SECURE_S3_BUCKET} --key ca.pem credentials/ca.pem
+            aws s3api get-object --bucket ${YEMBO_SECURE_S3_BUCKET} --key admin.pem credentials/admin.pem
+            aws s3api get-object --bucket ${YEMBO_SECURE_S3_BUCKET} --key admin-key.pem credentials/admin-key.pem
+            aws s3api get-object --bucket ${YEMBO_SECURE_S3_BUCKET} --key kubeconfig kubeconfig
+            export KUBECONFIG=./kubeconfig
             make build
             make push
             make deploy
