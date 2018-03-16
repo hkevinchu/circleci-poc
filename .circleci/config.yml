@@ -22,7 +22,4 @@ workflows:
   build:
     jobs:
       - build_push_deploy
-          filters:
-            branches:
-              only:
-                master
+
