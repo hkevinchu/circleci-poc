@@ -26,8 +26,7 @@ workflows:
   build_push_and_deploy:
     jobs:
       - build
-      - push
-      - deploy
+      - push-and-deploy
           filters:
             branches:
               only: master
