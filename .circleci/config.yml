@@ -22,7 +22,7 @@ workflows:
   build:
     jobs:
       - build_push_deploy
-         filters:
+          filters:
             branches:
-               only:
-                  - user/stratus10
+              only:
+                - user/stratus10
