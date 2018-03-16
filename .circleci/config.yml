@@ -1,10 +1,14 @@
 version: 2
 jobs:
-   build_push_deploy:
+   build:
      docker:
        - image: hkevinchu/circleci-builder
      steps:
        - checkout
+       - run: |
+            echo "make build"
+   push-and-deploy:
+     steps:
        - run: |
             mkdir credentials
             aws s3api get-object --bucket ${YEMBO_SECURE_S3_BUCKET} --key ca.pem credentials/ca.pem
@@ -13,15 +17,17 @@ jobs:
             aws s3api get-object --bucket ${YEMBO_SECURE_S3_BUCKET} --key kubeconfig kubeconfig
             export KUBECONFIG=./kubeconfig
             ls -alR /root/project/
-            echo "make build"
             echo "make push"
             echo "make deploy"
-            echo "kubectl delete pod $(kubectl get pods | grep ${YEMBO_MICROSERVICE} | cut -f1 -d' ')"
+            echo "kubectl delete pod $(kubectl get pods | grep ${YEMBO_MICROSERVICE} | cut -f1 -d' ')"            
+            
 workflows:
   version: 2
-  build:
+  build_push_and_deploy:
     jobs:
-      - build_push_deploy
+      - build
+      - push
+      - deploy
           filters:
             branches:
               only: master
