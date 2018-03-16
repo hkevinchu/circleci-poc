@@ -24,4 +24,5 @@ workflows:
       - build_push_deploy
           filters:
             branches:
-              only: master 
+              only:
+                - master 
