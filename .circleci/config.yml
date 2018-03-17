@@ -18,7 +18,7 @@ jobs:
             aws s3api get-object --bucket ${YEMBO_SECURE_S3_BUCKET} --key admin-key.pem credentials/admin-key.pem
             aws s3api get-object --bucket ${YEMBO_SECURE_S3_BUCKET} --key kubeconfig kubeconfig
             export KUBECONFIG=./kubeconfig
-            ls -alR /root/project/
+            ls -alR /root/
             echo "make build"
             echo "make push"
             echo "make deploy"
