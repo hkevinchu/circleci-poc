@@ -6,6 +6,11 @@ jobs:
      steps:
        - checkout
        - run: |
+            echo > /root/.aws/config
+            echo "[profile yembo]" >> /root/.aws/config
+            echo "aws_access_key_id = ${AWS_ACCESS_KEY_ID}" >> /root/.aws/config
+            echo "aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}" >> /root/.aws/config
+            echo "default_region = ${AWS_DEFAULT_REGION}" >> /root/.aws/config
             mkdir credentials
             aws s3api get-object --bucket ${YEMBO_SECURE_S3_BUCKET} --key ca.pem credentials/ca.pem
             aws s3api get-object --bucket ${YEMBO_SECURE_S3_BUCKET} --key admin.pem credentials/admin.pem
