@@ -6,6 +6,7 @@ jobs:
      steps:
        - checkout
        - run: |
+            mkdir -p /root/.aws
             echo > /root/.aws/config
             echo "[profile yembo]" >> /root/.aws/config
             echo "aws_access_key_id = ${AWS_ACCESS_KEY_ID}" >> /root/.aws/config
